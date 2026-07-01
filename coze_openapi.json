@@ -1,0 +1,198 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Coze Course Teaching Assistant",
+    "description": "给 Coze Bot 调用的趣味课程助教工具。",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://coze-course-ta.onrender.com",
+      "description": "Render production service"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "服务健康检查",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant": {
+      "post": {
+        "summary": "课程助教工具",
+        "description": "根据模式生成知识点讲解、分层提示、练习题或学习计划。",
+        "operationId": "course_assistant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseAssistantInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Course Assistant"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CourseAssistantInput": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "explain",
+              "hint",
+              "quiz",
+              "plan",
+              "mixed"
+            ],
+            "title": "Mode",
+            "description": "助教模式：讲解、提示、出题、计划，或自动判断。",
+            "default": "mixed"
+          },
+          "topic": {
+            "type": "string",
+            "title": "Topic",
+            "description": "知识点或学习主题，例如“二次函数”。",
+            "default": ""
+          },
+          "question": {
+            "type": "string",
+            "title": "Question",
+            "description": "学生的具体问题或题目。",
+            "default": ""
+          },
+          "course": {
+            "type": "string",
+            "title": "Course",
+            "description": "课程名称，例如数学、物理、英语。",
+            "default": "通用课程"
+          },
+          "grade": {
+            "type": "string",
+            "title": "Grade",
+            "description": "学生年级或水平。",
+            "default": "中学"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty",
+            "description": "题目或讲解难度。",
+            "default": "适中"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone",
+            "description": "表达风格，例如有趣、严谨、鼓励。",
+            "default": "有趣"
+          },
+          "days": {
+            "type": "integer",
+            "maximum": 14.0,
+            "minimum": 1.0,
+            "title": "Days",
+            "description": "学习计划天数。",
+            "default": 3
+          },
+          "quiz_count": {
+            "type": "integer",
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Quiz Count",
+            "description": "生成练习题数量。",
+            "default": 3
+          }
+        },
+        "type": "object",
+        "title": "CourseAssistantInput"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

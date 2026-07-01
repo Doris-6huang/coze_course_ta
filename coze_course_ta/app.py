@@ -27,6 +27,12 @@ app = FastAPI(
     title="Coze Course Teaching Assistant",
     description="给 Coze Bot 调用的趣味课程助教工具。",
     version="1.0.0",
+    servers=[
+        {
+            "url": "https://coze-course-ta.onrender.com",
+            "description": "Render production service",
+        }
+    ],
 )
 app.openapi_version = "3.0.3"
 
