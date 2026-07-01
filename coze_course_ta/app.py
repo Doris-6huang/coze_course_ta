@@ -5,7 +5,7 @@ from typing import Literal
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from core import AssistantRequest, build_assistant_response
+from .core import AssistantRequest, build_assistant_response
 
 
 class CourseAssistantInput(BaseModel):

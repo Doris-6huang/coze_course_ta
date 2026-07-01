@@ -1,4 +1,4 @@
-from core import AssistantRequest, build_assistant_response
+from coze_course_ta.core import AssistantRequest, build_assistant_response
 
 
 def test_explain_response_has_expected_sections():
@@ -29,4 +29,3 @@ def test_quiz_count_is_limited():
     assert response["mode"] == "quiz"
     assert response["payload"]["count"] == 8
     assert len(response["payload"]["questions"]) == 8
-
