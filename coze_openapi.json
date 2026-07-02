@@ -53,9 +53,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "type": "object",
-                  "title": "Response Course Assistant"
+                  "$ref": "#/components/schemas/CourseAssistantOutput"
                 }
               }
             }
@@ -146,6 +144,66 @@
         },
         "type": "object",
         "title": "CourseAssistantInput"
+      },
+      "CourseAssistantOutput": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "description": "实际使用的助教模式。"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "本次助教输出标题。"
+          },
+          "course": {
+            "type": "string",
+            "title": "Course",
+            "description": "课程名称。"
+          },
+          "grade": {
+            "type": "string",
+            "title": "Grade",
+            "description": "学生年级或水平。"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty",
+            "description": "题目或讲解难度。"
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer",
+            "description": "适合直接展示给学生的完整文字回答。"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload",
+            "description": "结构化结果，供 Bot 进一步编排。"
+          },
+          "next_actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Next Actions",
+            "description": "建议 Bot 接下来采取的动作。"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode",
+          "title",
+          "course",
+          "grade",
+          "difficulty",
+          "answer",
+          "payload",
+          "next_actions"
+        ],
+        "title": "CourseAssistantOutput"
       },
       "HTTPValidationError": {
         "properties": {

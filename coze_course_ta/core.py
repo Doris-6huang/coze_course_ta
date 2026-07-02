@@ -40,6 +40,7 @@ def build_assistant_response(request: AssistantRequest) -> dict:
         "course": request.course,
         "grade": request.grade,
         "difficulty": request.difficulty,
+        "answer": _format_answer(mode, payload),
         "payload": payload,
         "next_actions": _next_actions(mode),
     }
@@ -232,6 +233,46 @@ def _next_actions(mode: Mode) -> list[str]:
         "mixed": ["继续追问目标", "选择讲解或练习"],
     }
     return actions[mode]
+
+
+def _format_answer(mode: Mode, payload: dict) -> str:
+    if mode == "explain":
+        steps = "\n".join(f"- {step}" for step in payload["steps"])
+        mistakes = "\n".join(f"- {item}" for item in payload["common_mistakes"])
+        return (
+            f"{payload['one_sentence']}\n\n"
+            f"类比：{payload['metaphor']}\n\n"
+            f"学习步骤：\n{steps}\n\n"
+            f"易错点：\n{mistakes}\n\n"
+            f"小挑战：{payload['mini_challenge']}"
+        )
+    if mode == "hint":
+        return (
+            f"题目：{payload['question_seen']}\n\n"
+            f"提示 1：{payload['hint_1']}\n"
+            f"提示 2：{payload['hint_2']}\n"
+            f"提示 3：{payload['hint_3']}\n\n"
+            f"自查：{payload['check_yourself']}"
+        )
+    if mode == "quiz":
+        lines = [f"下面是关于“{payload['topic']}”的 {payload['count']} 道练习："]
+        for item in payload["questions"]:
+            options = " ".join(f"{key}. {value}" for key, value in item["options"].items())
+            lines.append(
+                f"{item['id']}. {item['question']}\n"
+                f"{options}\n"
+                f"答案：{item['answer']}。解析：{item['explanation']}"
+            )
+        lines.append(payload["after_quiz"])
+        return "\n\n".join(lines)
+    if mode == "plan":
+        lines = [f"“{payload['topic']}”{payload['days']} 天学习计划："]
+        for item in payload["plan"]:
+            tasks = "；".join(item["tasks"])
+            lines.append(f"第 {item['day']} 天：{item['focus']}。任务：{tasks}。")
+        lines.append(f"复习规则：{payload['review_rule']}")
+        return "\n\n".join(lines)
+    return str(payload)
 
 
 def _stable_number(text: str, modulo: int) -> int:

@@ -8,6 +8,7 @@ def test_explain_response_has_expected_sections():
 
     assert response["mode"] == "explain"
     assert "二次函数" in response["title"]
+    assert "二次函数" in response["answer"]
     assert "one_sentence" in response["payload"]
     assert response["payload"]["steps"]
 
